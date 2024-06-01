@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+{% if not current_user.is_authenticated %}
+    <h1 class="text-center">Register</h1>
+{% endif %}
+{% endblock %}
