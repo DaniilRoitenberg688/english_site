@@ -1,3 +1,6 @@
 .nav {padding-top: 15px}
 .navbar-brand {font-size: 25px}
-.register_login_buttons {padding-top: 5px}
+.nav_btn {padding-top: 5px}
+.name {color: white}
+.btn {font-color: white}
+main {margin: 25px}

@@ -21,11 +21,20 @@
         <p class="nav-item">
             <a class="navbar-brand" href="/">English</a>
         </p>
-
-        <p class="nav-item register_login_buttons">
+        {% if not current_user.is_authenticated %}
+        <p class="nav-item nav_btn">
             <a class="btn btn-primary" href="/register">Зарегистрироваться</a>
             <a class="btn btn-success" href="/login">Войти</a>
         </p>
+
+        {% else %}
+        <p class="h2 nav-item name">{{ current_user.name }}</p>
+        <div class="nav-item nav_btn">
+            <a class="btn btn-danger h3" href="/logout">Выйти</a>
+        </div>
+
+        {% endif %}
+
     </nav>
 </header>
 
