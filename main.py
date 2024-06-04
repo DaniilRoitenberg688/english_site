@@ -2,10 +2,11 @@ from flask import Flask, render_template, redirect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from data.db_session_users import create_session_users, global_init_users
 from data.db_session_words import create_session_words, global_init_words
-from forms.user_form import LoginForm, RegisterForm
+from forms.user_form import LoginForm, RegisterForm, RegisterStudentForm
 
 
 from data.users import User
+
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -16,15 +17,26 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 def load_user(user_id):
     """Загрузка пользователя"""
     db_sess = create_session_users()
-    return db_sess.query(User).get(user_id)
+    user = db_sess.query(User).get(user_id)
+
+    return user
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     sess = create_session_users()
     if current_user.is_authenticated:
-        if current_user.admin:
+        if not current_user.status and current_user.admin:
             users = sess.query(User).all()
+            print(users)
             return render_template('index_for_admin.html', users=users)
+        if current_user.status:
+            sess = create_session_users()
+            students = sess.query(User).filter(User.teacher == current_user.email)
+            students = sorted(students, key=lambda student: student.surname)
+            print(students)
+            return render_template('index_for_teacher.html', students=students)
+
 
     return render_template('index.html')
 
@@ -42,6 +54,8 @@ def register():
                     surname=form.surname.data,
                     email=form.email.data)
         user.set_password(form.password.data)
+        if user.email == 'daniilroitenberg@yandex.ru':
+            user.admin = True
         sess.merge(user)
         sess.commit()
         return redirect('/login')
@@ -55,15 +69,14 @@ def login():
     if form.validate_on_submit():
         sess = create_session_users()
         user = sess.query(User).filter(User.email == form.email.data).first()
-        if not user:
-            return render_template('login.html', message='Такого пользователя нет', title='Вход',
-                                   form=form)
-        if not user.check_password(form.password.data):
-            return render_template('login.html', message='Неверный пароль', title='Вход',
-                                   form=form)
+        if user and user.check_password(form.password.data):
+            if user.email == 'daniilroitenberg@yandex.ru':
+                user.admin = True
+                sess.commit()
+            login_user(user, remember=form.remember_me.data)
+            return redirect('/')
 
-        login_user(user, remember=form.remember_me.data)
-        return redirect('/')
+        return render_template('login.html', form=form, message='Не правильный логин или пароль', title='Вход')
 
     return render_template('login.html', title='Вход', form=form)
 
@@ -76,9 +89,11 @@ def logout():
 
 @app.route('/new_teacher/<id>', methods=['GET', 'POST'])
 def new_teacher(id):
+    print(id)
     sess = create_session_users()
-    user = sess.query(User).get(id)
-    user.teacher = True
+    user: User = sess.query(User).get(id)
+    print(user.id)
+    user.status = 1
     sess.commit()
     return redirect('/')
 
@@ -86,10 +101,32 @@ def new_teacher(id):
 @app.route('/remove_teacher/<id>', methods=['GET', 'POST'])
 def remove_teacher(id):
     sess = create_session_users()
-    user = sess.query(User).get(id)
-    user.teacher = False
+    user: User = sess.query(User).get(id)
+    print(user.id)
+    user.status = 0
     sess.commit()
     return redirect('/')
+
+
+
+
+@app.route('/add_student', methods=['POST', 'GET'])
+def add_student():
+    form = RegisterStudentForm()
+    if form.validate_on_submit():
+        email = f'{form.name.data}@{form.surname.data}'
+        sess = create_session_users()
+        teacher_email = str(current_user.email)
+        user = User(name=form.name.data,
+                    surname=form.surname.data,
+                    email=email,
+                    teacher=teacher_email,
+                    modules='')
+        user.set_password(form.password.data)
+        sess.merge(user)
+        sess.commit()
+        return redirect('/')
+    return render_template('register_student.html', form=form, title='Student registration')
 
 
 def main():

@@ -3,32 +3,36 @@
 
 <table class="table text-center">
     <thead>
-        <tr>
-            <th scope="col">id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Is teacher or no</th>
-            <th scope="col">Change status</th>
-        </tr>
-
-        {% for user in users %}
-        {% if not (user.email == current_user.email) %}
-        <tr>
-            <th scope="col">{{user.id}}</th>
-            <th scope="col">{{user.name}}</th>
-            <th scope="col">{{user.email}}</th>
-            {% if user.teacher %}
-                <th scope="col" class="table-success">YES</th>
-                <th scope="col"><a class="btn btn-primary" href="/remove_teacher/{{user.id}}">Remove</a></th>
-            {% else %}
-                <th scope="col" class="table-danger">NO</th>
-                <th scope="col"><a class="btn btn-primary" href="/new_teacher/{{user.id}}">Become</a></th>
-            {% endif %}
-        </tr>
-        {% endif %}
-        {% endfor %}
-
+    <tr>
+        <th scope="col">id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Is teacher or no</th>
+        <th scope="col">Change status</th>
+    </tr>
     </thead>
+    <tbody>
+    {% for user in users %}
+    {% if user.email != current_user.email and not user.teacher %}
+    <tr>
+        <th scope="col">{{user.id}}</th>
+        <th scope="col">{{user.name}}</th>
+        <th scope="col">{{user.email}}</th>
+
+        {% if user.status %}
+
+        <th scope="col" class="table-success">YES</th>
+        <th scope="col"><a class="btn btn-primary" href="/remove_teacher/{{user.id}}">Remove</a></th>
+        {% else %}
+        <th scope="col" class="table-danger">NO</th>
+        <th scope="col"><a class="btn btn-primary" href="/new_teacher/{{user.id}}">Become</a></th>
+        {% endif %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </tbody>
+
+
 </table>
 
 

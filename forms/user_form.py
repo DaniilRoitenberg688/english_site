@@ -17,3 +17,10 @@ class LoginForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired()])
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти', validators=[DataRequired()])
+
+
+class RegisterStudentForm(FlaskForm):
+    name = StringField('Ваше имя', validators=[DataRequired()])
+    surname = StringField('Ваше фамилия', validators=[DataRequired()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    submit = SubmitField('Зарегистрировать', validators=[DataRequired()])

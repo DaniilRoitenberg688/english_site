@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="text-center">
+    <a class="btn btn-primary" href="/add_student">Add student</a>
+    <a class="btn btn-primary" href="#">Modules</a>
+</div>
+<p></p>
+<table class="table text-center table-center">
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Surname and Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">info</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for student in students %}
+
+        <tr>
+            <th scope="col">{{ loop.index }}</th>
+            <th scope="col">{{ student.surname }} {{ student.name }}</th>
+            <th scope="col">{{ student.email }}</th>
+            <th scope="col"><a href="#">See info</a></th>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
