@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6edae48-b132-492d-98ac-f8d9d2b0322c" name="Changes" comment="Добавление и просмотр учеников">
-      <change afterPath="$PROJECT_DIR$/data/modules.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/new_module.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/see_all_modules.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/__users_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/__all_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/__words_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/forms/modules_forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/db_session_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db_session.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/db_session_words.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/teachers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index_for_teacher.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index_for_teacher.html" afterDir="false" />
-    </list>
+    <list default="true" id="b6edae48-b132-492d-98ac-f8d9d2b0322c" name="Changes" comment="Создание модулей. Тз в README.md" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -129,7 +116,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717516824279</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Создание модулей. Тз в README.md">
+      <option name="closed" value="true" />
+      <created>1717607361396</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1717607361396</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -147,6 +142,7 @@
     <MESSAGE value="Модель пользователей и base.html" />
     <MESSAGE value="Интерфейс админа" />
     <MESSAGE value="Добавление и просмотр учеников" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавление и просмотр учеников" />
+    <MESSAGE value="Создание модулей. Тз в README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="Создание модулей. Тз в README.md" />
   </component>
 </project>
