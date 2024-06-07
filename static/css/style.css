@@ -4,3 +4,23 @@
 .name {color: white}
 .btn {font-color: white}
 main {margin: 25px}
+
+.block{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.con {
+       margin-left: 50px;
+       margin-right: 50px;
+       width: 400px;
+}
+
+.edit_module_p {
+font-size: 27px;
+
+}

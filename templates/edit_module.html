@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Изменение модуля с названием: <b>{{module.name}}</b></h1>
+<br>
+
+<p class="edit_module_p">Название: <a
+                                      href="change_module_name/{{module.id}}">{{module.name}}</a></p>
+
+<p class="edit_module_p">Описание:
+    <a href="change_module_description/{{module.id}}">{{module.name}}</a>
+</p>
+
+<p><br></p>
+<a class="btn btn-primary" href="/all_modules">Вернуться</a>
+
+{% endblock %}

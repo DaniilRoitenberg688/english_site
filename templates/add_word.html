@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-center">Добавление слов</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="block">
+        <div class="con">
+            {{ form.word1.label }}
+            {{ form.word1(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation1.label }}
+            {{ form.translation1(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+    <div class="block">
+        <div class="con">
+            {{ form.word2.label }}
+            {{ form.word2(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation2.label }}
+            {{ form.translation2(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+    <div class="block">
+        <div class="con">
+            {{ form.word3.label }}
+            {{ form.word3(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation3.label }}
+            {{ form.translation3(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+    <div class="block">
+        <div class="con">
+            {{ form.word4.label }}
+            {{ form.word4(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation4.label }}
+            {{ form.translation4(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+
+    <div class="block">
+        <div class="con">
+            {{ form.word5.label }}
+            {{ form.word5(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation5.label }}
+            {{ form.translation5(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+    <div class="block">
+        <div class="con">
+            {{ form.word6.label }}
+            {{ form.word6(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation6.label }}
+            {{ form.translation6(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+    <div class="block">
+        <div class="con">
+            {{ form.word7.label }}
+            {{ form.word7(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation7.label }}
+            {{ form.translation7(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+    <div class="block">
+        <div class="con">
+            {{ form.word8.label }}
+            {{ form.word8(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation8.label }}
+            {{ form.translation8(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+    <div class="block">
+        <div class="con">
+            {{ form.word9.label }}
+            {{ form.word9(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation9.label }}
+            {{ form.translation9(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+    <div class="block">
+        <div class="con">
+            {{ form.word10.label }}
+            {{ form.word10(class="form-control word") }}
+        </div>
+
+        <div class="con">
+            {{ form.translation10.label }}
+            {{ form.translation10(class="form-control word") }}
+        </div>
+    </div>
+    <br>
+
+
+    <div class="text-center">{{ form.save_btn(type="submit", class="btn btn-primary") }}</div>
+    {{message}}
+
+</form>
+{% endblock %}

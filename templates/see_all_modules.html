@@ -24,8 +24,8 @@
         <th scope="col">{{ loop.index }}</th>
         <th scope="col">{{ module.name }}</th>
         <th scope="col">{{ module.description }}</th>
-        <th scope="col"><a class="btn btn-primary" href="#">Add</a></th>
-        <th scope="col"><a class="btn btn-primary" href="#">Edit</a></th>
+        <th scope="col"><a class="btn btn-primary" href="/add_word/{{module.id}}">Add</a></th>
+        <th scope="col"><a class="btn btn-primary" href="/edit_module/{{module.id}}">Edit</a></th>
     </tr>
     {% endfor %}
 
