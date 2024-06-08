@@ -1,16 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Изменение модуля с названием: <b>{{module.name}}</b></h1>
+<h1 class="text-center">Изменение модуля <b>{{module.name}}</b></h1>
 <br>
 
 <p class="edit_module_p">Название: <a
-                                      href="change_module_name/{{module.id}}">{{module.name}}</a></p>
+        href="/change_name_description/{{module.id}}_1">{{module.name}}</a></p>
 
 <p class="edit_module_p">Описание:
-    <a href="change_module_description/{{module.id}}">{{module.name}}</a>
+    <a href="/change_name_description/{{module.id}}_0">{{module.description}}</a>
 </p>
 
-<p><br></p>
-<a class="btn btn-primary" href="/all_modules">Вернуться</a>
+{% if words %}
+<h2 class="text-center">Слова:</h2>
 
+<table class="table text-center table-center">
+    <thead>
+    <tr>
+        <th scope="col">Слово</th>
+        <th scope="col">Перевод</th>
+        <th scope="col">Изменить</th>
+        <th scope="col">Удалить</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for word in words %}
+    <tr>
+        <th scope="col">{{word['word']}}</th>
+        <th scope="col">{{word['translation']}}</th>
+        <th scope="col"><a href="/edit_word/{{module.id}}_{{word['id']}}">Изменить</a></th>
+        <th scope="col" class=""><a href="/delete_word/{{module.id}}_{{word['id']}}" class="text-danger">Удалить</a>
+        </th>
+
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+{% endif %}
+
+<p><br></p>
+<div>
+    <a class="btn btn-primary" href="/all_modules">Вернуться</a>
+    <a class="btn btn-danger" href="/delete_module/{{module.id}}">Удалить модуль</a>
+</div>
 {% endblock %}

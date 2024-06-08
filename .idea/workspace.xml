@@ -4,21 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6edae48-b132-492d-98ac-f8d9d2b0322c" name="Changes" comment="requirements.txt">
-      <change afterPath="$PROJECT_DIR$/templates/add_word.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/edit_module.html" afterDir="false" />
+    <list default="true" id="b6edae48-b132-492d-98ac-f8d9d2b0322c" name="Changes" comment="Добавление слов. Наконец-то!">
+      <change afterPath="$PROJECT_DIR$/templates/change_name_description.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/users.db" beforeDir="false" afterPath="$PROJECT_DIR$/db/users.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/forms/modules_forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/forms/modules_forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/words/test.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/words/test1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/words/test2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/words/test3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/new_module.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/new_module.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/edit_module.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/edit_module.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/see_all_modules.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/see_all_modules.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -161,7 +155,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717607817423</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Добавление слов. Наконец-то!">
+      <option name="closed" value="true" />
+      <created>1717789781333</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1717789781333</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -184,6 +186,7 @@
     <MESSAGE value="Добавление и просмотр учеников" />
     <MESSAGE value="Создание модулей. Тз в README.md" />
     <MESSAGE value="requirements.txt" />
-    <option name="LAST_COMMIT_MESSAGE" value="requirements.txt" />
+    <MESSAGE value="Добавление слов. Наконец-то!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавление слов. Наконец-то!" />
   </component>
 </project>

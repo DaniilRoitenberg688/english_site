@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField, EmailField, BooleanField, TextAreaField
+from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 
@@ -10,7 +10,7 @@ class CreateModule(FlaskForm):
 
 
 class AddWord(FlaskForm):
-    word1 = StringField('Слово' )
+    word1 = StringField('Слово')
     translation1 = StringField('Перевод')
 
     word2 = StringField('Слово')
@@ -43,3 +43,13 @@ class AddWord(FlaskForm):
     save_btn = SubmitField('Сохранить')
 
 
+class ChangeNameDescription(FlaskForm):
+    new_line = StringField('Введите новое значение', validators=[DataRequired()])
+    submit = SubmitField('Изменить')
+
+
+class EditWord(FlaskForm):
+    word = StringField('Слово')
+    translation = StringField('Перевод')
+
+    save_btn = SubmitField('Изменить')

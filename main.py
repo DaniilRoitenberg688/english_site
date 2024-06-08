@@ -1,4 +1,5 @@
 import csv
+import os
 
 from flask import Flask, render_template, redirect
 from flask_login import LoginManager, login_user, logout_user, current_user
@@ -6,7 +7,7 @@ from flask_login import LoginManager, login_user, logout_user, current_user
 from data.db_session import create_session, global_init
 from data.modules import Module
 from data.users import User
-from forms.modules_forms import CreateModule, AddWord
+from forms.modules_forms import CreateModule, AddWord, ChangeNameDescription, EditWord
 from forms.user_form import LoginForm, RegisterForm, RegisterStudentForm
 
 app = Flask(__name__)
@@ -161,7 +162,7 @@ def add_module():
         for student in sess.query(User).filter(User.teacher == current_user.email):
             if student.modules:
                 modules = student.modules.split()
-                modules.append(f'{module.id}: {0}')
+                modules.append(f'{module.id}:{0}')
                 student.modules = ' '.join(modules)
             else:
                 student.modules = f'{module.id}: {0}'
@@ -214,7 +215,109 @@ def add_word(module_id):
 def edit_module(module_id):
     sess = create_session()
     module = sess.query(Module).get(module_id)
-    return render_template('edit_module.html', module=module, title='Изменение модуля')
+
+    with open(f'static/words/{module.words}', 'r') as file:
+        data = csv.DictReader(file, delimiter=';', quotechar='"')
+        words_of_module = [i for i in data]
+
+    return render_template('edit_module.html', module=module, title='Изменение модуля', words=words_of_module)
+
+
+@app.route('/delete_word/<ids>/', methods=['GET', 'POST'])
+def delete_word(ids):
+    sess = create_session()
+    module_id, word_id = ids.split('_')
+    module_id, word_id = int(module_id), int(word_id)
+    module: Module = sess.query(Module).get(module_id)
+    with open(f'static/words/{module.words}', 'r') as file:
+        words = [i for i in csv.DictReader(file, delimiter=';', quotechar='"') if int(i['id']) != word_id]
+
+    with open(f'static/words/{module.words}', 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=['id', 'word', 'translation'], delimiter=';', quotechar='"')
+        writer.writeheader()
+        for i in words:
+            writer.writerow(i)
+
+    return redirect(f'/edit_module/{module_id}')
+
+
+@app.route('/change_name_description/<arguments>', methods=['GET', 'POST'])
+def change_name_description(arguments):
+    module_id, name_description = arguments.split('_')
+    module_id, name_description = int(module_id), int(name_description)
+    form = ChangeNameDescription()
+    if form.validate_on_submit():
+        sess = create_session()
+        module: Module = sess.query(Module).get(module_id)
+
+        if name_description:
+            previous_file_name = module.words
+            module.name = form.new_line.data
+            module.words = f'{form.new_line.data}.csv'
+            os.rename(f'static/words/{previous_file_name}', f'static/words/{form.new_line.data}.csv')
+        else:
+            module.description = form.new_line.data
+
+        sess.commit()
+        return redirect(f'/edit_module/{module_id}')
+
+    return render_template('change_name_description.html',
+                           name=name_description, form=form, title='Изменение модуля', id=module_id)
+
+
+@app.route('/edit_word/<arguments>', methods=['GET', 'POST'])
+def edit_word(arguments):
+    form = EditWord()
+    module_id, word_id = arguments.split('_')
+    module_id, word_id = int(module_id), int(word_id)
+    if form.validate_on_submit():
+
+        sess = create_session()
+        module: Module = sess.query(Module).get(module_id)
+
+        with open(f'static/words/{module.words}', 'r') as file:
+            all_words = [i for i in csv.DictReader(file, delimiter=';', quotechar='"')]
+
+            for word in all_words:
+                if int(word['id']) == word_id:
+                    if form.word.data:
+                        word['word'] = form.word.data
+
+                    if form.translation.data:
+                        word['translation'] = form.translation.data
+
+        with open(f'static/words/{module.words}', 'w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['id', 'word', 'translation'], delimiter=';', quotechar='"')
+            writer.writeheader()
+            for line in all_words:
+                print(line)
+                writer.writerow(line)
+
+        return redirect(f'/edit_module/{module_id}')
+
+    return render_template('edit_word.html', form=form, title='Изменение слова', id=module_id)
+
+
+@app.route('/delete_module/<int:module_id>', methods=['GET', 'POST'])
+def delete_module(module_id):
+    sess = create_session()
+    module_for_delete: Module = sess.query(Module).get(module_id)
+    all_students = sess.query(User).filter(User.teacher == current_user.email).all()
+    print(all_students)
+    student: User
+
+    for student in all_students:
+        students_modules = list(filter(lambda x: int(x.split(':')[0]) != module_id, student.modules.split()))
+        print(students_modules)
+        student.modules = ' '.join(students_modules)
+
+    os.remove(f'static/words/{module_for_delete.words}')
+
+    sess.delete(module_for_delete)
+
+    sess.commit()
+
+    return redirect('/all_modules')
 
 
 def main():

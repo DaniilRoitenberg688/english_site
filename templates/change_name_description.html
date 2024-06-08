@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if name %}
+<h2>Изменение названия</h2>
+{% else %}
+<h2>Изменение описания</h2>
+{% endif %}
+<br>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.new_line.label }}<br>
+        {{ form.new_line(class="form-control") }}<br>
+        {% for error in form.new_line.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+
+    <p>{{ form.submit(type="submit", class="btn btn-success") }}
+        <a class="btn btn-primary" href="/edit_module/{{id}}">Вернуться</a>
+    </p>
+    {{message}}
+
+
+</form>
+{% endblock %}

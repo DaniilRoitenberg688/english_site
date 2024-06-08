@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Изменение слова</h2>
+<br>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.word.label }}<br>
+        {{ form.word(class="form-control") }}<br>
+        {% for error in form.word.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+
+    <p>
+        {{ form.translation.label }}<br>
+        {{ form.translation(class="form-control") }}<br>
+        {% for error in form.translation.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+
+    <p>{{ form.save_btn(type="submit", class="btn btn-success") }}
+        <a class="btn btn-primary" href="/edit_module/{{id}}">Вернуться</a>
+    </p>
+    {{message}}
+
+
+</form>
+{% endblock %}
