@@ -1,5 +1,6 @@
 import csv
 import os
+from random import randrange
 
 from flask import Flask, render_template, redirect
 from flask_login import LoginManager, login_user, logout_user, current_user
@@ -8,6 +9,7 @@ from data.db_session import create_session, global_init
 from data.modules import Module
 from data.users import User
 from forms.modules_forms import CreateModule, AddWord, ChangeNameDescription, EditWord
+from forms.test_forms import TestWord
 from forms.user_form import LoginForm, RegisterForm, RegisterStudentForm
 
 app = Flask(__name__)
@@ -25,22 +27,115 @@ def load_user(user_id):
     return user
 
 
+def my_shuffle(line: list) -> str:
+    result_line = ''
+    while line:
+        letter_index = randrange(len(line))
+        result_line += line.pop(letter_index)
+
+    return result_line
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    global words_for_test, length, right_answers, have_done
     sess = create_session()
     if current_user.is_authenticated:
         if not current_user.status and current_user.admin:
             users = sess.query(User).all()
-            print(users)
             return render_template('index_for_admin.html', users=users)
+
         if current_user.status:
             sess = create_session()
             students = sess.query(User).filter(User.teacher == current_user.email)
             students = sorted(students, key=lambda student: student.surname)
-            print(students)
             return render_template('index_for_teacher.html', students=students)
 
+        sess = create_session()
+        modules = [i.split(':') for i in current_user.modules.split()]
+        modules_for_template = []
+        for module_id, result in modules:
+            module = sess.query(Module).get(int(module_id))
+            modules_for_template.append([module, result])
+
+        have_done = 0
+        length = 0
+        right_answers = 0
+        words_for_test = []
+
+        return render_template('index.html', modules=modules_for_template)
+
     return render_template('index.html')
+
+
+words_for_test = []
+right_answers = 0
+length = len(words_for_test)
+have_done = 0
+
+
+def prepare_test(module_id):
+    global words_for_test, length
+    sess = create_session()
+    module: Module = sess.query(Module).get(module_id)
+
+    with open(f'static/words/{module.words}', 'r') as file:
+        all_words = [i for i in csv.DictReader(file, delimiter=';', quotechar='"')]
+        length = len(all_words)
+
+    for _ in range(len(all_words)):
+        random_word = all_words[randrange(len(all_words))]
+        word = random_word['word']
+        translation = random_word['translation']
+        word_id = random_word['id']
+        changed_word = my_shuffle(list(word))
+
+        words_for_test.append({'id': word_id, 'word': word, 'translation': translation, 'changed_word': changed_word})
+        all_words.remove(random_word)
+    return words_for_test
+
+
+@app.route('/test/<module_id>', methods=['GET', 'POST'])
+def test(module_id):
+    global words_for_test, length, have_done, right_answers
+    if have_done == 0:
+        prepare_test(module_id)
+
+    if not words_for_test:
+        sess = create_session()
+        user: User = sess.query(User).get(current_user.id)
+        words = [i.split(':') for i in user.modules.split()]
+        for i in words:
+            if i[0] == module_id:
+                i[1] = str(int(round(right_answers / length, 2)) * 100)
+
+        words = [':'.join(i) for i in words]
+        user.modules = ' '.join(words)
+        sess.commit()
+        return redirect('/')
+    word = words_for_test.pop(0)
+    have_done += 1
+    return redirect(f'/test_word/{word["word"]}_{word["translation"]}_{word["changed_word"]}_{module_id}')
+
+
+@app.route('/test_word/<arguments>', methods=['GET', 'POST'])
+def test_word(arguments):
+    global words_for_test, have_done, right_answers, length
+    form = TestWord()
+    word, translation, changed_word, module_id = arguments.split('_')
+    if form.validate_on_submit():
+        if form.answer.data == word:
+            right_answers += 1
+            return render_template('right_not.html', right=1, have_done=have_done, length=length,
+                                   module_id=module_id)
+
+        return render_template('right_not.html', have_done=have_done, length=length,
+                               module_id=module_id)
+
+    return render_template('test_word.html', have_done=have_done, length=length, form=form,
+                           word={'changed_word': changed_word, 'translation': translation})
+
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -290,7 +385,6 @@ def edit_word(arguments):
             writer = csv.DictWriter(file, fieldnames=['id', 'word', 'translation'], delimiter=';', quotechar='"')
             writer.writeheader()
             for line in all_words:
-                print(line)
                 writer.writerow(line)
 
         return redirect(f'/edit_module/{module_id}')
@@ -318,6 +412,39 @@ def delete_module(module_id):
     sess.commit()
 
     return redirect('/all_modules')
+
+
+@app.route('/student_info/<int:student_id>', methods=['GET', 'POST'])
+def student_info(student_id):
+    sess = create_session()
+    student: User = sess.query(User).get(student_id)
+    student_modules = student.modules.split()
+    for_template = []
+    for module in student_modules:
+        module_id, result = module.split(':')
+        module: Module = sess.query(Module).get(module_id)
+        for_template.append([module, result])
+    return render_template('student_info.html', title='Информация об ученике', student=student,
+                           student_modules=for_template)
+
+
+@app.route('/make_need/<arguments>', methods=['GET', 'POST'])
+def make_need(arguments):
+    module_id, student_id = arguments.split('_')
+
+    sess = create_session()
+
+    student: User = sess.query(User).get(int(student_id))
+
+    student_modules = [i.split(':') for i in student.modules.split()]
+    for i in student_modules:
+        if i[0] == module_id:
+            i[1] = '0'
+
+    new_student_modules = [':'.join(i) for i in student_modules]
+    student.modules = ' '.join(new_student_modules)
+    sess.commit()
+    return redirect(f'/student_info/{student_id}')
 
 
 def main():

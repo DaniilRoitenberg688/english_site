@@ -22,7 +22,7 @@
             <th scope="col">{{ loop.index }}</th>
             <th scope="col">{{ student.surname }} {{ student.name }}</th>
             <th scope="col">{{ student.email }}</th>
-            <th scope="col"><a href="#">See info</a></th>
+            <th scope="col"><a href="/student_info/{{student.id}}">See info</a></th>
         </tr>
     {% endfor %}
     </tbody>

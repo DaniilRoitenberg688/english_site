@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-center">{{student.name}} {{student.surname}}</h1>
+<br>
+<h3 class="text-center">Модули ученика</h3>
+<table class="table table-canter text-center table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">Модуль</th>
+        <th scope="col">Результат</th>
+        <th scope="col">Задать</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for module, result in student_modules %}
+    <tr>
+        <th scope="col">{{module.name}}</th>
+        {% if result != '0' %}
+        <th scope="col" class="table-success">{{result}}</th>
+        {% else %}
+        <th scope="col" class="table-danger">Не сдано</th>
+        {% endif %}
+
+        {% if result == '100' %}
+        <th scope="col"><a href="/make_need/{{module.id}}_{{student.id}}">Задать</a></th>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
+
+{% endblock %}

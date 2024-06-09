@@ -1,7 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
 {% if not current_user.is_authenticated %}
-    <h1 class="text-center">Зарегистрируйтесь или войдите</h1>
+<h1 class="text-center">Зарегистрируйтесь или войдите</h1>
 
+
+{% else %}
+<h1 class="text-center">Модули для выполнения</h1>
+<table class="table table-center text-center">
+    <thead>
+    <tr>
+        <th scope="col">Название модуля</th>
+        <th scope="col">Описание модуля</th>
+        <th scope="col">Ваш результат</th>
+        <th scope="col">Выполнить</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for module, result in modules %}
+    {% if result != '100' %}
+    <tr>
+        <th scope="col">{{module.name}}</th>
+        <th scope="col">{{module.description}}</th>
+        {% if result == '0' %}
+        <th scope="col" class="table-danger">Не сдано</th>
+        {% else %}
+        <th scope="col" class="table-success">{{result}}%</th>
+        {% endif %}
+        <th scope="col"><a href="/test/{{module.id}}">Выполнить</a></th>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </tbody>
+
+</table>
 {% endif %}
 {% endblock %}
