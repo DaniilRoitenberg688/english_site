@@ -50,20 +50,22 @@ def index():
             students = sess.query(User).filter(User.teacher == current_user.email)
             students = sorted(students, key=lambda student: student.surname)
             return render_template('index_for_teacher.html', students=students, title='Главная')
+        if current_user.teacher:
+            sess = create_session()
+            modules = [i.split(':') for i in current_user.modules.split()]
+            modules_for_template = []
+            for module_id, result in modules:
+                module = sess.query(Module).get(int(module_id))
+                modules_for_template.append([module, result])
 
-        sess = create_session()
-        modules = [i.split(':') for i in current_user.modules.split()]
-        modules_for_template = []
-        for module_id, result in modules:
-            module = sess.query(Module).get(int(module_id))
-            modules_for_template.append([module, result])
+            have_done = 0
+            length = 0
+            right_answers = 0
+            words_for_test = []
 
-        have_done = 0
-        length = 0
-        right_answers = 0
-        words_for_test = []
+            return render_template('index.html', modules=modules_for_template, title='Главная')
 
-        return render_template('index.html', modules=modules_for_template, title='Главная')
+        return render_template('index_for_everybody.html', title='Главная')
 
     return render_template('index.html', title='Войдите или зарегистрируйтесь')
 
