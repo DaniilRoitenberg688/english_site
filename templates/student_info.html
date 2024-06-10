@@ -3,7 +3,7 @@
 <h1 class="text-center">{{student.name}} {{student.surname}}</h1>
 <br>
 <h3 class="text-center">Модули ученика</h3>
-<table class="table table-canter text-center table-bordered">
+<table class="table table-canter text-center">
     <thead>
     <tr>
         <th scope="col">Модуль</th>
@@ -17,12 +17,12 @@
     <tr>
         <th scope="col">{{module.name}}</th>
         {% if result != '0' %}
-        <th scope="col" class="table-success">{{result}}</th>
+        <th scope="col" class="table-success">{{result}}%</th>
         {% else %}
         <th scope="col" class="table-danger">Не сдано</th>
         {% endif %}
 
-        {% if result == '100' %}
+        {% if result == '100.0' %}
         <th scope="col"><a href="/make_need/{{module.id}}_{{student.id}}">Задать</a></th>
         {% endif %}
     </tr>
@@ -30,6 +30,7 @@
     </tbody>
 
 </table>
-
+<br>
+<a class="btn btn-primary" href="/">Вернуться</a>
 
 {% endblock %}

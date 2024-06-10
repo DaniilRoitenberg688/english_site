@@ -43,13 +43,13 @@ def index():
     if current_user.is_authenticated:
         if not current_user.status and current_user.admin:
             users = sess.query(User).all()
-            return render_template('index_for_admin.html', users=users)
+            return render_template('index_for_admin.html', users=users, title='Главная')
 
         if current_user.status:
             sess = create_session()
             students = sess.query(User).filter(User.teacher == current_user.email)
             students = sorted(students, key=lambda student: student.surname)
-            return render_template('index_for_teacher.html', students=students)
+            return render_template('index_for_teacher.html', students=students, title='Главная')
 
         sess = create_session()
         modules = [i.split(':') for i in current_user.modules.split()]
@@ -63,9 +63,9 @@ def index():
         right_answers = 0
         words_for_test = []
 
-        return render_template('index.html', modules=modules_for_template)
+        return render_template('index.html', modules=modules_for_template, title='Главная')
 
-    return render_template('index.html')
+    return render_template('index.html', title='Войдите или зарегистрируйтесь')
 
 
 words_for_test = []
@@ -107,7 +107,7 @@ def test(module_id):
         words = [i.split(':') for i in user.modules.split()]
         for i in words:
             if i[0] == module_id:
-                i[1] = str(int(round(right_answers / length, 2)) * 100)
+                i[1] = str(round(right_answers / length, 2) * 100)
 
         words = [':'.join(i) for i in words]
         user.modules = ' '.join(words)
@@ -127,15 +127,13 @@ def test_word(arguments):
         if form.answer.data == word:
             right_answers += 1
             return render_template('right_not.html', right=1, have_done=have_done, length=length,
-                                   module_id=module_id)
+                                   module_id=module_id, title='Верно')
 
         return render_template('right_not.html', have_done=have_done, length=length,
-                               module_id=module_id)
+                               module_id=module_id, title='Неверно')
 
     return render_template('test_word.html', have_done=have_done, length=length, form=form,
-                           word={'changed_word': changed_word, 'translation': translation})
-
-
+                           word={'changed_word': changed_word, 'translation': translation}, title='Тест')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -186,10 +184,8 @@ def logout():
 
 @app.route('/new_teacher/<id>', methods=['GET', 'POST'])
 def new_teacher(id):
-    print(id)
     sess = create_session()
     user: User = sess.query(User).get(id)
-    print(user.id)
     user.status = 1
     sess.commit()
     return redirect('/')
@@ -199,7 +195,6 @@ def new_teacher(id):
 def remove_teacher(id):
     sess = create_session()
     user: User = sess.query(User).get(id)
-    print(user.id)
     user.status = 0
     sess.commit()
     return redirect('/')
@@ -209,19 +204,32 @@ def remove_teacher(id):
 def add_student():
     form = RegisterStudentForm()
     if form.validate_on_submit():
-        email = f'{form.name.data}@{form.surname.data}'
+        email = f'{form.name.data.lower()}@{form.surname.data.lower()}'
         sess = create_session()
         teacher_email = str(current_user.email)
+        teachers_modules = sess.query(Module).filter(Module.teacher == current_user.id).all()
+        line = []
+        for i in teachers_modules:
+            line.append(':'.join([str(i.id), '0']))
         user = User(name=form.name.data,
                     surname=form.surname.data,
                     email=email,
                     teacher=teacher_email,
-                    modules='')
+                    modules=' '.join(line))
         user.set_password(form.password.data)
         sess.merge(user)
         sess.commit()
         return redirect('/')
-    return render_template('register_student.html', form=form, title='Student registration')
+    return render_template('register_student.html', form=form, title='Регистрация ученика')
+
+
+@app.route('/delete_student/<int:student_id>', methods=['POST', 'GET'])
+def delete_student(student_id):
+    sess = create_session()
+    student = sess.query(User).get(student_id)
+    sess.delete(student)
+    sess.commit()
+    return redirect('/')
 
 
 @app.route('/all_modules', methods=['GET', 'POST'])
@@ -260,7 +268,7 @@ def add_module():
                 modules.append(f'{module.id}:{0}')
                 student.modules = ' '.join(modules)
             else:
-                student.modules = f'{module.id}: {0}'
+                student.modules = f'{module.id}:{0}'
 
         sess.commit()
 
@@ -272,9 +280,9 @@ def add_module():
 @app.route('/add_word/<int:module_id>', methods=['GET', 'POST'])
 def add_word(module_id):
     form = AddWord()
+    sess = create_session()
+    module: Module = sess.query(Module).get(module_id)
     if form.validate_on_submit():
-        sess = create_session()
-        module: Module = sess.query(Module).get(module_id)
         with open(f'static/words/{module.words}', 'r', newline='') as file:
             data = csv.DictReader(file, delimiter=';', quotechar='"')
             previous_words = [line for line in data]
@@ -286,9 +294,7 @@ def add_word(module_id):
 
             last_index = 1
             if previous_words:
-                print(previous_words[-1])
                 last_index = int(previous_words[-1]['id']) + 1
-                print(last_index)
 
             for line in previous_words:
                 writer.writerow(line)
@@ -303,7 +309,7 @@ def add_word(module_id):
 
         return redirect('/all_modules')
 
-    return render_template('add_word.html', form=form, title='Добавление слов')
+    return render_template('add_word.html', form=form, title='Добавление слов', module_name=module.name)
 
 
 @app.route('/edit_module/<int:module_id>', methods=['GET', 'POST'])
@@ -397,12 +403,10 @@ def delete_module(module_id):
     sess = create_session()
     module_for_delete: Module = sess.query(Module).get(module_id)
     all_students = sess.query(User).filter(User.teacher == current_user.email).all()
-    print(all_students)
     student: User
 
     for student in all_students:
         students_modules = list(filter(lambda x: int(x.split(':')[0]) != module_id, student.modules.split()))
-        print(students_modules)
         student.modules = ' '.join(students_modules)
 
     os.remove(f'static/words/{module_for_delete.words}')
@@ -448,7 +452,7 @@ def make_need(arguments):
 
 
 def main():
-    global_init('db/users.db')
+    global_init('db/users_modules.db')
     app.run('127.0.0.1', 5000)
 
 

@@ -2,17 +2,18 @@
 {% block content %}
 
 <div class="text-center">
-    <a class="btn btn-primary" href="/add_student">Add student</a>
-    <a class="btn btn-primary" href="/all_modules">Modules</a>
+    <a class="btn btn-primary" href="/add_student">Добавить ученика</a>
+    <a class="btn btn-primary" href="/all_modules">Модули</a>
 </div>
 <p></p>
 <table class="table text-center table-center">
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Surname and Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">info</th>
+            <th scope="col">Фамилия и имя</th>
+            <th scope="col">Логин</th>
+            <th scope="col">Информация</th>
+            <th scope="col">Удалить профиль</th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +23,9 @@
             <th scope="col">{{ loop.index }}</th>
             <th scope="col">{{ student.surname }} {{ student.name }}</th>
             <th scope="col">{{ student.email }}</th>
-            <th scope="col"><a href="/student_info/{{student.id}}">See info</a></th>
+            <th scope="col"><a href="/student_info/{{student.id}}">Посмотреть информацию</a></th>
+            <th scope="col"><a href="/delete_student/{{student.id}}" class="text text-danger">Удалить</a></th>
+
         </tr>
     {% endfor %}
     </tbody>

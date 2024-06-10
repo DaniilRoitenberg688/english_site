@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 {% if not current_user.is_authenticated %}
-<h1 class="text-center">Зарегистрируйтесь или войдите</h1>
+<h1 class="text-center">Если вы учитель зарегистрируйтесь или войдите</h1>
+<br>
+<h1 class="text-center">Если вы ученик, то спросите ваш пароль и логин у учителя. Вам регистрироваться не надо.</h1>
 
 
 {% else %}
+
 <h1 class="text-center">Модули для выполнения</h1>
+<br>
 <table class="table table-center text-center">
     <thead>
     <tr>
@@ -18,7 +22,7 @@
 
     <tbody>
     {% for module, result in modules %}
-    {% if result != '100' %}
+    {% if result != '100.0' %}
     <tr>
         <th scope="col">{{module.name}}</th>
         <th scope="col">{{module.description}}</th>

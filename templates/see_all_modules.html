@@ -2,8 +2,8 @@
 {% block content %}
 
 <div class="text-center">
-    <a class="btn btn-primary" href="/add_module">Add module</a>
-    <a class="btn btn-primary" href="/">Students</a>
+    <a class="btn btn-primary" href="/add_module">Добавить модуль</a>
+    <a class="btn btn-primary" href="/">Ученики</a>
 </div>
 <p></p>
 
@@ -11,10 +11,10 @@
     <thead>
     <tr>
         <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Description</th>
-        <th scope="col">Add words</th>
-        <th scope="col">Edit</th>
+        <th scope="col">Название</th>
+        <th scope="col">Описание</th>
+        <th scope="col">Добавить слова</th>
+        <th scope="col">Редактировать модуль</th>
     </tr>
     </thead>
     <tbody>
@@ -24,8 +24,8 @@
         <th scope="col">{{ loop.index }}</th>
         <th scope="col">{{ module.name }}</th>
         <th scope="col">{{ module.description }}</th>
-        <th scope="col"><a href="/add_word/{{module.id}}">Add</a></th>
-        <th scope="col"><a href="/edit_module/{{module.id}}">Edit</a></th>
+        <th scope="col"><a href="/add_word/{{module.id}}">Добавить</a></th>
+        <th scope="col"><a href="/edit_module/{{module.id}}">Редактировать</a></th>
     </tr>
     {% endfor %}
 

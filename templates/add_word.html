@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="text-center">Добавление слов</h1>
+<h1 class="text-center">Добавление слов в модуль под название "{{module_name}}"</h1><br>
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <div class="block">
@@ -135,8 +135,11 @@
     </div>
     <br>
 
-
-    <div class="text-center">{{ form.save_btn(type="submit", class="btn btn-primary") }}</div>
+    <br>
+    <div class="text-center">
+        <a class="btn btn-primary" href="/all_modules">Вернуться</a>
+        {{ form.save_btn(type="submit", class="btn btn-success") }}
+    </div>
     {{message}}
 
 </form>

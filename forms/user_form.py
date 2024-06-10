@@ -13,14 +13,14 @@ class RegisterForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = EmailField('Почта', validators=[DataRequired()])
+    email = StringField('Почта или логин', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти', validators=[DataRequired()])
 
 
 class RegisterStudentForm(FlaskForm):
-    name = StringField('Ваше имя', validators=[DataRequired()])
-    surname = StringField('Ваше фамилия', validators=[DataRequired()])
+    name = StringField('Имя ученика', validators=[DataRequired()])
+    surname = StringField('Фамилия ученика', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     submit = SubmitField('Зарегистрировать', validators=[DataRequired()])
